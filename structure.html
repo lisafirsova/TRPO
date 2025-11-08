@@ -4,370 +4,227 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Поликлиника</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      background-color: #F5F7FA;
-      color: #2D2D2D;
-      line-height: 1.5;
-    }
-
-    main {
-      max-width: 1920px;
-      margin: 0 auto;
-      padding: 0;
-    }
-
-    /* Шапка с тенью */
-    .header-block {
-      width: 1920px;
-      height: 140px;
-      background-color: #FFFFFF;
-      box-shadow: 4px -2px 4px rgba(0,0,0,0.25);
-      display: flex;
-      align-items: flex-start;
-      position: relative;
-    }
-
-    h1 {
-      font-family: Inter, sans-serif;
-      font-weight: bold;
-      font-size: 61px;
-      margin: 46px 0 0 49px;
-      color: #2D2D2D;
-    }
-
-    h2 {
-      margin: 0 0 15px;
-      font-weight: 600;
-      color: #2D2D2D;
-    }
-
-    h2.doctor-title {
-      font-size: 55px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    h2.records-title {
-      font-size: 55px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    /* Навигационные иконки */
-    .nav-icons {
-      position: absolute;
-      right: 50px;
-      top: 35px;
-      display: flex;
-      gap: 100px; /* Изменено с 20px на 100px */
-      align-items: center;
-    }
-
-    .nav-icon {
-      width: 70px;
-      height: 70px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .nav-icon:hover {
-      transform: scale(1.1);
-    }
-
-    .user-icon {
-      width: 100px; /* Изменено с 80px на 100px */
-      height: 100px; /* Изменено с 80px на 100px */
-      background-color: #CDCFD3; /* Добавлен цвет фона */
-      border-radius: 50%; /* Добавлено скругление для круга */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Кнопки */
-    .btn {
-      display: inline-block;
-      padding: 12px 20px;
-      border-radius: 40px;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      border: none;
-      margin-bottom: 10px;
-      box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
-      transition: transform 0.2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      background-color: #4ba3ff;
-      color: #fff;
-    }
-
-    .btn-green {
-      background-color: #3CCF91;
-      color: #fff;
-    }
-
-    /* Контейнер для кнопок */
-    .buttons-container {
-      display: flex;
-      gap: 120px;
-      margin: 20px 0;
-      justify-content: center;
-    }
-
-    .appointment-btn, .schedule-btn {
-      width: 850px;
-      height: 150px;
-      font-size: 32px;
-    }
-
-    /* Две колонки */
-    .two-columns {
-      display: flex;
-      gap: 150px;
-      align-items: flex-start;
-      margin: 40px 0 0 60px;
-    }
-
-    .two-columns > section {
-      flex: 1;
-    }
-
-    /* Карточка врача */
-    .doctor-card {
-      display: flex;
-      align-items: flex-start;
-      background: #fafafa;
-      border: 1px solid #e0e0e0;
-      border-radius: 40px;
-      padding: 15px;
-      gap: 15px;
-      width: 750px;
-      height: 200px;
-      box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
-      position: relative;
-    }
-
-    .doctor-card input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      cursor: not-allowed;
-      box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
-    }
-
-    .doctor-info {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      position: absolute;
-      left: 154px;
-      top: 35px;
-    }
-
-    .doctor-name {
-      font-weight: bold;
-      margin-bottom: 5px;
-      font-size: 36px;
-    }
-
-    .doctor-specialty {
-      font-size: 18px;
-      color: #555;
-    }
-
-    .doctor-details {
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-      position: absolute;
-      right: 43px;
-      top: 31px;
-    }
-
-    .detail-box {
-      width: 120px;
-      height: 50px;
-      background-color: #f0f0f0;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-family: Inter, sans-serif;
-      font-weight: 500;
-      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-    }
-
-    .doctor-image {
-      width: 170px;
-      height: 170px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 20px;
-      overflow: hidden;
-    }
-
-    .doctor-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Контейнер для таблицы */
-    .table-wrapper {
-      overflow: hidden;
-      border-radius: 40px;
-      box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
-      width: 900px;
-      height: 427px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 18px;
-      background: #fff;
-    }
-
-    th, td {
-      padding: 15px;
-      text-align: left;
-      border-bottom: 1px solid #e0e0e0;
-    }
-
-    th {
-      background-color: #f5f5f5;
-      font-weight: bold;
-    }
-
-    .date-time-column {
-      width: 40%;
-    }
-
-    .specialist-column {
-      width: 60%;
-    }
-
-    /* Адаптивность */
-    @media (max-width: 1600px) {
-      .header-block, main {
-        width: 100%;
-      }
-      
-      .buttons-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-      }
-      
-      .two-columns {
-        flex-direction: column;
-        margin: 40px 20px;
-        gap: 40px;
-      }
-      
-      .doctor-card, .table-wrapper {
-        width: 100%;
-      }
-      
-      .nav-icons {
-        position: static;
-        justify-content: center;
-        margin-top: 20px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
   <main>
-    <!-- Шапка с тенью -->
-    <div class="header-block">
-      <h1>Поликлиника</h1>
+    <header class="main-header">
+      <h1 class="logo-title">Поликлиника</h1>
       
-      <!-- Навигационные иконки -->
-      <div class="nav-icons">
-        <!-- Домик -->
-        <img class="nav-icon" src="Home.png" alt="Главная">
+      <nav class="nav-icons">
+        <a href="#" class="nav-link active">
+          <img class="nav-icon" src="Home.png" alt="Главная">
+        </a>
         
-        <!-- Календарь -->
-        <img class="nav-icon" src="Calendar.png" alt="Расписание">
+        <a href="schedule.html" class="nav-link">
+          <img class="nav-icon" src="Calendar.png" alt="Запись">
+        </a>
         
-        <!-- Часы -->
-        <img class="nav-icon" src="Clock.png" alt="Время">
+        <a href="#" class="nav-link">
+          <img class="nav-icon" src="Clock.png" alt="Время">
+        </a>
         
-        <!-- Шестеренка -->
-        <img class="nav-icon" src="settings.png" alt="Настройки">
-        
-        <!-- Пользователь -->
-        <div class="user-icon">
-          <img src="person.png" alt="Профиль" style="width: 60px; height: 60px;">
-        </div>
-      </div>
-    </div>
+        <a href="#" class="nav-link">
+          <img class="nav-icon" src="settings.png" alt="Настройки">
+        </a>
+      </nav>
+    </header>
 
-    <!-- Кнопки -->
-    <div class="buttons-container">
-      <button class="btn btn-primary appointment-btn">Записаться на прием</button>
-      <button class="btn btn-green schedule-btn">Расписание работы врачей</button>
-    </div>
-
-    <!-- Два блока рядом -->
-    <div class="two-columns">
-      <!-- Врач -->
-      <section>
-        <h2 class="doctor-title">Ваш врач</h2>
-        <div class="doctor-card">
-          <div class="doctor-image">
-            <!-- Замените src на путь к вашему изображению из Figma -->
-            <img src="Rectangle.png" alt="Фото врача">
+          <div class="buttons-container">
+        <button class="btn btn-primary appointment-btn">Записаться на прием</button>
+        <a class="btn btn-green schedule-btn" href="schedule.html">Расписание работы врачей</a>
           </div>
-          <div class="doctor-info">
-            <span class="doctor-name">Акакий Харитонович</span>
-            <span class="doctor-specialty">Терапевт</span>
-          </div>
-          <div class="doctor-details">
-            <div class="detail-box">15:10</div>
-            <div class="detail-box">Каб. 170</div>
-          </div>
+<section class="intro-section" id="about">
+    <div class="intro-content">
+        <h2 class="section-heading">О нашей Поликлинике</h2>
+        <p>
+            Добро пожаловать в <strong>Поликлинику</strong> — ваш центр современной медицины, где забота о пациенте стоит на первом месте. С 2015 года мы предоставляем полный спектр медицинских услуг, сочетая высокие стандарты качества, инновационные технологии и индивидуальный подход к каждому. Мы работаем, чтобы сделать ваше лечение максимально комфортным, быстрым и эффективным.
+        </p>
+    <div class="slider-container" id="info-slider">
+        
+        <div class="slide active-slide">
+                        <img src="highdiagn.jpg" alt="Высокоточная диагностика" class="slide-image">
+            <div class="slide-content">
+                <h3>Высокоточная диагностика</h3>
+                <p>Используем МРТ, КТ и УЗИ экспертного класса, что позволяет нашим специалистам ставить максимально точные диагнозы в кратчайшие сроки.</p>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <img src="maloiv.jpg" alt="Малоинвазивная хирургия" class="slide-image">
+            <div class="slide-content">
+                <h3>Малоинвазивная хирургия</h3>
+                <p>Проводим сложнейшие операции с минимальным вмешательством (через проколы) для быстрого восстановления и сокращения срока госпитализации.</p>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <img src="doctors.jpg" alt="Врачи с международным опытом" class="slide-image">
+            <div class="slide-content">
+                <h3>Врачи с международным опытом</h3>
+                <p>Наши специалисты регулярно проходят стажировки в Европе и Израиле, применяя в практике самые передовые мировые протоколы лечения.</p>
+            </div>
+        </div>
+        
+                <button class="prev-btn">❮</button>
+        <button class="next-btn">❯</button>
+        
+                <div class="slider-dots">
+            <span class="dot active-dot" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+        </div>
+    </div>
+</section>
+    </section>
+    <section class="services-section" id="services">
+        <h2 class="section-heading">Наши услуги</h2>
+        <div class="services-grid">
+            
+            <div class="service-category">
+                <div class="service-icon-wrapper">
+                    <img class="service-icon-img" src="8542653_tooth_dentist_icon.png" alt="Стоматология">
+                </div>
+                <h3>Стоматология</h3>
+                <p>Лечение, протезирование и имплантация зубов.</p>
+            </div>
+            
+            <div class="service-category">
+                 <div class="service-icon-wrapper">
+                    <img class="service-icon-img" src="1609618_nervous_organs_system_icon.png" alt="Неврология">
+                </div>
+                <h3>Неврология</h3>
+                <p>Лечение мигреней, остеохондроза и невралгии.</p>
+            </div>
+            
+            <div class="service-category">
+                <div class="service-icon-wrapper">
+                    <img class="service-icon-img" src="9025703_heart_icon.svg" alt="Кардиология">
+                </div>
+                <h3>Кардиология</h3>
+                <p>Диагностика и лечение заболеваний сердца и сосудов.</p>
+            </div>
+            
+            <div class="service-category">
+                 <div class="service-icon-wrapper">
+                    <img class="service-icon-img" src="9025398_ear_icon.png" alt="ЛОР">
+                </div>
+                <h3>ЛОР</h3>
+                <p>Лечение заболеваний уха, горла и носа.</p>
+            </div>
+            
+            
+            <div class="service-category">
+                 <div class="service-icon-wrapper">
+                    <img class="service-icon-img" src="6549567_medical_scalpel_surgeon_surgery_surgical knife_icon.png" alt="Хирургия">
+                </div>
+                <h3>Хирургия</h3>
+                <p>Консультации, малоинвазивные операции.</p>
+            </div>
+            
         </div>
-      </section>
+        <button class="btn btn-primary full-list-btn">Посмотреть полный список услуг</button>
+    </section>
 
-      <!-- Таблица -->
-      <section>
-        <h2 class="records-title">Ближайшие записи</h2>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th class="date-time-column">Дата и время</th>
-                <th class="specialist-column">Специалист</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>16.07.2025 15:10</td>
-                <td>Терапевт</td>
-              </tr>
-              <tr>
-                <td>18.07.2025 14:00</td>
-                <td>Оториноларинголог</td>
-              </tr>
-            </tbody>
-          </table>
+    <section class="top-specialists-section" id="doctors">
+        <h2 class="section-heading">Лучшие специалисты клиники</h2>
+        <div class="specialist-cards-grid">
+            
+            <div class="specialist-card">
+                <img src="doctor1.jpg" alt="Фото специалиста 1" class="spec-photo">
+                <h4 class="spec-name">Иванов И.И.</h4>
+                <p class="spec-specialty">Стоматолог-имплантолог</p>
+                <div class="spec-rating">⭐ 4.9 (120 отзывов)</div>
+                <button class="btn btn-green btn-small">Подробнее</button>
+            </div>
+            
+            <div class="specialist-card">
+                 <img src="doctor2.jpg" alt="Фото специалиста 2" class="spec-photo">
+                <h4 class="spec-name">Петрова С.А.</h4>
+                <p class="spec-specialty">Невролог высшей категории</p>
+                <div class="spec-rating">⭐ 5.0 (98 отзывов)</div>
+                <button class="btn btn-green btn-small">Подробнее</button>
+            </div>
+            
+            <div class="specialist-card">
+                 <img src="doctor3.jpg" alt="Фото специалиста 3" class="spec-photo">
+                <h4 class="spec-name">Сидоров А.Н.</h4>
+                <p class="spec-specialty">Кардиолог, д.м.н.</p>
+                <div class="spec-rating">⭐ 4.8 (155 отзывов)</div>
+                <button class="btn btn-green btn-small">Подробнее</button>
+            </div>
+            
         </div>
-      </section>
-    </div>
+    </section>
+
+    <section class="advantages-section">
+        <h2 class="section-heading">Почему выбирают нас?</h2>
+        <div class="advantages-grid">
+            <div class="advantage-item">
+                <div class="advantages-icon-wrapper">
+                    <img class="advantages-icon-img" src="326568_check_circle_icon.png" alt="Галочка">
+                </div>
+                <h4>Высокий профессионализм</h4>
+                <p>Только опытные врачи с международными сертификатами.</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantages-icon-wrapper">
+                    <img class="advantages-icon-img" src="8680297_speed_fill_icon.png" alt="Скорость">
+                </div>
+                <h4>Отсутствие очередей</h4>
+                <p>Строгое соблюдение расписания и онлайн-запись.</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantages-icon-wrapper">
+                    <img class="advantages-icon-img" src="809538_apple_devices_iphone_monitor_multimedia_icon.png" alt="Скорость">
+                </div>
+                <h4>Цифровые технологии</h4>
+                <p>Все записи и результаты анализов доступны онлайн.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contacts-section">
+        <h2 class="section-heading">Наши контакты в Минске</h2>
+        <div class="contacts-content">
+            <div class="contact-info">
+                <p><strong>Адрес:</strong> г. Минск, пр-т Независимости, 15</p>
+                <p><strong>Телефон:</strong> +375 (17) 123-45-67</p>
+                <p><strong>Email:</strong> info@policlinika.by</p>
+                <p><strong>Время работы:</strong> Пн-Пт: 8:00–20:00, Сб-Вс: 9:00–18:00</p>
+                <p><strong>Как добраться:</strong> Станция метро "Площадь Победы".</p>
+            </div>
+            <div class="map-placeholder">
+                 <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2350.231924522434!2d27.567290077366373!3d53.90150997237882!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46dbcfd515647565%3A0x868b209d29b0d1e3!2z0YPQu9C40YbQsCDQndC-0LzQvdCw0YHQutC-0YAgMTUsINCc0LjQvdGM0YHQutCw!5e0!3m2!1sru!2sde!4v1700688000000!5m2!1sru!2sde" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                 </iframe>
+            </div>
+        </div>
+    </section>
+
   </main>
+  
+  <footer class="main-footer">
+    <div class="footer-content">
+        <p class="footer-logo">Поликлиника</p>
+       <nav class="footer-nav">
+            <a href="#about">О нас</a>
+            <a href="#services">Услуги</a>
+            <a href="#doctors">Врачи</a>
+            <a href="Политика обработки персональных данных.pdf">Политика обработки персональных данных</a>
+        </nav>
+        <div class="copyright">
+            <p>© 2025 Поликлиника. Все права защищены.</p>
+            <p>Лицензия БР-77-01-000000</p>
+        </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

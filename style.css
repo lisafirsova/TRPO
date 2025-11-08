@@ -1,0 +1,608 @@
+/* ==================================== */
+/* 1. ПЕРЕМЕННЫЕ И ОСНОВЫ             */
+/* ==================================== */
+:root {
+    --bg-color: #F5F7FA;
+    --text-color: #2D2D2D;
+    --card-bg: #FFFFFF;
+    --dark-bg: #2D2D2D;
+    --primary-color: #4ba3ff;
+    --secondary-color: #3CCF91;
+    --shadow-color: rgba(0, 0, 0, 0.25);
+    --icon-color: #7b917b;
+    font-size: 16px;
+    --header-height: clamp(100px, 8vw, 140px);
+    --promo-height: clamp(80px, 10vw, 110px);
+}
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    font-size: clamp(14px, 1.5vw, 18px);
+    padding-bottom: 0;
+}
+main {
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 0;
+}
+h1, h2, h3 {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+    margin-top: 0;
+}
+.full-list-btn {
+    margin: 40px auto 0;
+    display: block;
+    width: clamp(250px, 30vw, 450px);
+    height: clamp(50px, 6vw, 70px);
+    font-size: clamp(16px, 1.5vw, 24px);
+}
+.section-heading {
+    font-size: clamp(30px, 4vw, 55px);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+}
+.main-info-section {
+    padding: 0 2%;
+    padding-top: 20px;
+}
+
+/* ==================================== */
+/* 2. СТИЛИ HEADER (ШАПКИ)          */
+/* ==================================== */
+.main-header {
+    width: 100%;
+    height: var(--header-height);
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2%;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.logo-title {
+    font-size: clamp(30px, 4vw, 61px);
+    font-weight: bold;
+    margin: 0;
+    padding-left: 20px;
+}
+.nav-icons {
+    display: flex;
+    gap: clamp(20px, 3vw, 50px);
+    align-items: center;
+}
+.nav-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+.nav-icon {
+    width: clamp(40px, 4vw, 70px);
+    height: clamp(40px, 4vw, 70px);
+    cursor: pointer;
+    background-color: transparent !important;
+    transition: transform 0.2s;
+}
+.nav-icon:hover, .nav-link:focus .nav-icon {
+    transform: scale(1.1);
+}
+.nav-link.active .nav-icon {
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 5px;
+}
+
+/* ==================================== */
+/* 4. СТИЛИ КНОПОК И СЛАЙД-ШОУ */
+/* ==================================== */
+
+.buttons-container {
+    display: flex;
+    gap: clamp(20px, 5vw, 120px);
+    margin: 20px auto 40px;
+    max-width: 1920px;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(280px, 40vw, 850px);
+    height: clamp(70px, 8vw, 150px);
+    padding: 12px 20px;
+    border-radius: 40px;
+    font-size: clamp(18px, 2.5vw, 32px);
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    box-shadow: 5px 5px 4px var(--shadow-color);
+    transition: transform 0.2s, background-color 0.2s;
+    color: var(--card-bg);
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+}
+.btn-primary:hover {
+    background-color: #3b88d8;
+}
+
+.btn-green {
+    background-color: var(--secondary-color);
+}
+.btn-green:hover {
+    background-color: #35b380;
+}
+.btn-small {
+    height: auto;
+    width: auto;
+    font-size: 1rem;
+    padding: 8px 15px;
+    margin-top: 10px;
+    border-radius: 20px;
+}
+
+.intro-section {
+    padding: 60px 2%;
+    background-color: var(--card-bg);
+    margin-bottom: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.slider-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.slide {
+    display: none;
+    position: relative;
+    height: 400px;
+}
+
+.slide.active-slide {
+    display: block;
+}
+
+.slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 20px;
+}
+
+.slide-content {
+    position:sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 40px;
+    text-align: left;
+    color: var(--card-bg);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.98) 0%,
+        rgba(0, 0, 0, 0.98) 3%,
+        rgba(0, 0, 0, 0.7) 40%,
+        rgba(0, 0, 0, 0) 70%
+    );
+    border-radius: 0 0 20px 20px;
+}
+
+.slide-content h3 {
+    color: var(--card-bg);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+}
+.slide-content p {
+    color: var(--card-bg);
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 24px;
+    opacity: 0.7;
+    transition: opacity 0.2s, background 0.2s;
+}
+
+.prev-btn:hover, .next-btn:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.prev-btn {
+    left: 0;
+    border-radius: 0 20px 20px 0;
+}
+
+.next-btn {
+    right: 0;
+    border-radius: 20px 0 0 20px;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 20;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.6s ease;
+}
+
+.dot.active-dot {
+    background-color: var(--secondary-color);
+    border: 2px solid var(--card-bg);
+}
+
+/* ==================================== */
+/* 5. СЕКЦИИ: УСЛУГИ */
+/* ==================================== */
+.services-section {
+    padding: 60px 2%;
+    background-color: var(--card-bg);
+    margin-top: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1600px;
+    margin: 40px auto 0;
+}
+
+.service-category {
+    padding: 25px;
+    border-radius: 15px;
+    background-color: var(--bg-color);
+    box-shadow: 5px 5px 4px var(--shadow-color);
+    transition: transform 0.2s;
+}
+
+.service-category:hover {
+    transform: translateY(-5px);
+}
+
+.service-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent !important;
+    border-radius: 10px;
+    padding: 5px;
+}
+.service-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.service-category h3 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+/* ==================================== */
+/* 6. СЕКЦИИ: СПЕЦИАЛИСТЫ */
+/* ==================================== */
+.top-specialists-section {
+    padding: 60px 2%;
+    text-align: center;
+    background-color: var(--bg-color);
+}
+
+.specialist-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1400px;
+    margin: 40px auto;
+}
+
+.specialist-card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 4px var(--shadow-color);
+    transition: transform 0.2s;
+}
+.specialist-card:hover {
+    transform: translateY(-5px);
+}
+
+.spec-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid var(--icon-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.123);
+}
+.spec-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.spec-specialty {
+    color: #666;
+    margin-bottom: 10px;
+}
+.spec-rating {
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+/* ==================================== */
+/* 7. СЕКЦИИ: ПРЕИМУЩЕСТВА И КОНТАКТЫ */
+/* ==================================== */
+.advantages-section {
+    padding: 60px 2%;
+    background-color: var(--card-bg);
+    margin-top: 40px;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.05);
+}
+.advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.advantage-item {
+    padding: 20px;
+    border-radius: 15px;
+    background-color: var(--bg-color);
+    box-shadow: 5px 5px 4px var(--shadow-color);
+    transition: transform 0.2s;
+}
+.advantage-item:hover {
+    transform: translateY(-5px);
+}
+.advantages-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.advantages-grid h4 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+.advantages-icon-img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+.icon-circle {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.contacts-section {
+    padding: 60px 2%;
+    margin-bottom: 0;
+    background-color: var(--bg-color);
+}
+
+.contacts-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(30px, 4vw, 80px);
+    max-width: 1400px;
+    margin: 40px auto;
+    align-items: start;
+}
+
+.contact-info {
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    text-align: left;
+}
+.contact-info p {
+    margin-bottom: 10px;
+}
+
+.map-placeholder {
+    width: 100%;
+    padding-bottom: 100%;
+    height: 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.map-placeholder iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ==================================== */
+/* 8. СТИЛИ FOOTER (ПОДВАЛ)           */
+/* ==================================== */
+.main-footer {
+    background-color: var(--dark-bg);
+    color: var(--card-bg);
+    padding: 40px 2%;
+    text-align: center;
+}
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.footer-logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.footer-nav a {
+    color: var(--card-bg);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+.footer-nav a:hover {
+    color: var(--primary-color);
+}
+.copyright {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #ccc;
+}
+.copyright p {
+    margin: 5px 0;
+}
+
+/* ==================================== */
+/* 9. АДАПТИВНЫЙ ДИЗАЙН */
+/* ==================================== */
+
+@media (max-width: 1200px) {
+    .specialist-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 1024px) {
+    .slide {
+        height: 350px;
+    }
+    .slide-content {
+        padding: 20px;
+    }
+    .buttons-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .btn {
+        width: 100%;
+        height: 60px;
+    }
+    .contacts-content {
+        grid-template-columns: 1fr;
+    }
+    .map-placeholder {
+        padding-bottom: 60%;
+    }
+}
+@media (max-width: 768px) {
+    .nav-icons {
+        gap: 15px;
+    }
+    .logo-title {
+        padding-left: 10px;
+    }
+    .specialist-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    .services-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    .footer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .btn {
+        height: 60px;
+    }
+    .promo-block {
+        height: auto;
+        padding: 10px 20px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: 0;
+    }
+    .promo-text {
+        margin-bottom: 5px;
+    }
+    .promo-text p {
+        display: none;
+    }
+    .promo-btn {
+        margin: 10px 0 0 0;
+        width: 100%;
+        max-width: 300px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    .slide {
+        height: 250px;
+    }
+    .slide-content {
+        padding: 15px 20px;
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.98) 0%,
+            rgba(0, 0, 0, 0.98) 5%,
+            rgba(0, 0, 0, 0.7) 10%,
+            rgba(0, 0, 0, 0) 20%
+        );
+    }
+    .slide-content h3 {
+        font-size: 1.5rem;
+    }
+}

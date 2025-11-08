@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание работы врачей - Поликлиника</title>
+    <style>
+        :root {
+            --bg-color: #F5F7FA;
+            --text-color: #2D2D2D;
+            --card-bg: #FFFFFF;
+            --dark-bg: #2D2D2D;
+            --primary-color: #4ba3ff;
+            --secondary-color: #3CCF91;
+            --shadow-color: rgba(0, 0, 0, 0.25);
+            --icon-color: #7b917b;
+            font-size: 16px;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            font-size: clamp(14px, 1.5vw, 18px);
+            padding-bottom: 0;
+        }
+        
+        main {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            margin-top: 0;
+        }
+        
+        .section-heading {
+            font-size: clamp(30px, 4vw, 55px);
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .main-header {
+            width: 100%;
+            height: clamp(100px, 8vw, 140px);
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-title {
+            font-size: clamp(30px, 4vw, 61px);
+            font-weight: bold;
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .nav-icons {
+            display: flex;
+            gap: clamp(20px, 3vw, 50px);
+            align-items: center;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-icon {
+            width: clamp(40px, 4vw, 70px);
+            height: clamp(40px, 4vw, 70px);
+            cursor: pointer;
+            background-color: transparent !important;
+            transition: transform 0.2s;
+        }
+        
+        .nav-icon:hover, .nav-link:focus .nav-icon {
+            transform: scale(1.1);
+        }
+        
+        .nav-link.active .nav-icon {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: clamp(18px, 2.5vw, 32px);
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 5px 5px 4px var(--shadow-color);
+            transition: transform 0.2s, background-color 0.2s;
+            color: var(--card-bg);
+            text-decoration: none;
+        }
+        
+        .btn-green {
+            background-color: var(--secondary-color);
+            width: clamp(200px, 40vw, 650px);
+            height: clamp(50px, 8vw, 100px);
+            margin: 40px auto;
+            text-align: center;
+        }
+        
+        .btn-green:hover {
+            background-color: #35b380;
+        }
+        
+        /* СТИЛИ ТАБЛИЦЫ РАСПИСАНИЯ */
+        .schedule-section {
+            padding: 60px 2%;
+            background-color: var(--card-bg);
+            margin: 40px 2%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+        }
+        
+        .schedule-table-wrapper {
+            overflow-x: auto;
+            margin: 40px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            min-width: 1000px;
+        }
+        
+        .schedule-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+        
+        .schedule-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .schedule-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .department-header {
+            background-color: var(--dark-bg) !important;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .department-header td {
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .cabinet-cell {
+            font-weight: bold;
+            background-color: #f0f8ff;
+        }
+        
+        .name-cell {
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .position-cell {
+            text-align: left;
+        }
+        
+        .time-cell {
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .status-cell {
+            font-weight: bold;
+        }
+        
+        .status-active {
+            color: var(--secondary-color);
+        }
+        
+        .status-sick {
+            color: #ff0000;
+        }
+        .main-footer {
+            background-color: var(--dark-bg);
+            color: var(--card-bg);
+            padding: 40px 2%;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .footer-nav a {
+            color: var(--card-bg);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        
+        .footer-nav a:hover {
+            color: var(--primary-color);
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+        
+        .copyright p {
+            margin: 5px 0;
+        }
+        
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 768px) {
+            .nav-icons {
+                gap: 15px;
+            }
+            
+            .logo-title {
+                padding-left: 10px;
+            }
+            
+            .schedule-section {
+                margin: 20px 2%;
+                padding: 30px 2%;
+            }
+            
+            .schedule-table th, .schedule-table td {
+                padding: 8px 5px;
+                font-size: 0.85rem;
+            }
+            
+            .department-header td {
+                padding: 10px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header class="main-header">
+            <h1 class="logo-title">Поликлиника</h1>
+            <nav class="nav-icons">
+                <a href="structure.html" class="nav-link">
+                    <img class="nav-icon" src="GrayHome.png" alt="Главная">
+                </a>
+                <a href="schedule.html" class="nav-link active"> 
+                    <img class="nav-icon" src="BlackCalendar.png" alt="Расписание">
+                </a>
+                <a href="#" class="nav-link">
+                    <img class="nav-icon" src="Clock.png" alt="Время">
+                </a>
+                <a href="#" class="nav-link">
+                    <img class="nav-icon" src="settings.png" alt="Настройки">
+                </a>
+            </nav>
+        </header>
+
+        <section class="schedule-section">
+            <h2 class="section-heading">График работы специалистов</h2>
+
+            <div class="schedule-table-wrapper">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>№ Каб</th>
+                            <th>ФИО</th>
+                            <th>Должность</th>
+                            <th>Понедельник</th>
+                            <th>Вторник</th>
+                            <th>Среда</th>
+                            <th>Четверг</th>
+                            <th>Пятница</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cabinet-cell">233</td>
+                            <td class="name-cell">Помойник Ольга Викторовна</td>
+                            <td class="position-cell">Нейрохирург</td>
+                            
+                            <td class="time-cell">17:00 - 20:00</td>
+                            <td class="time-cell">17:00 - 20:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">224</td>
+                            <td class="name-cell">Жигулёвская Марина Николаевна</td>
+                            <td class="position-cell">Хирург</td>
+                            
+                            <td class="time-cell">16:00 - 19:00</td>
+                            <td class="time-cell">16:00 - 19:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">223</td>
+                            <td class="name-cell">Тищенко Наталья Викторовна</td>
+                            <td class="position-cell">протезист</td>
+                            
+                            <td class="time-cell">17:00 - 20:00</td>
+                            <td class="time-cell">17:00 - 20:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">235</td>
+                            <td class="name-cell">Гуликова Маргарита Петровна</td>
+                            <td class="position-cell">надоело заполнять</td>
+                            
+                            <td class="time-cell">16:00 - 19:00</td>
+                            <td class="time-cell">16:00 - 19:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">226</td>
+                            <td class="name-cell">Завало Елена Сергеевна</td>
+                            <td class="position-cell">надоело заполнять</td>
+                            
+                            <td class="time-cell">15:00 - 18:00</td>
+                            <td class="time-cell">15:00 - 18:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">228</td>
+                            <td class="name-cell">Казанович Ольга Геннадьевна</td>
+                            <td class="position-cell">надоело заполнять</td>
+                            
+                            <td class="time-cell">17:00 - 20:00</td>
+                            <td class="time-cell">17:00 - 20:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">225</td>
+                            <td class="name-cell">Савич Татьяна Иосифовна</td>
+                            <td class="position-cell">надоело заполнять</td>
+                            
+                            <td class="time-cell">15:00 - 18:00</td>
+                            <td class="time-cell">15:00 - 18:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">08:00 - 11:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">227</td>
+                            <td class="name-cell">Беляев Пётр Андреевич</td>
+                            <td class="position-cell">надоело заполнять</td>
+                            <td class="time-cell">16:00 - 19:00</td>
+                            <td class="time-cell">16:00 - 19:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">10:00 - 13:00</td>
+                        </tr>
+                        <tr>
+                            <td class="cabinet-cell">201</td>
+                            <td class="name-cell">Евченко Надежда Валерьевна</td>
+                            <td class="position-cell">надоело заполнять</td>
+                            
+                            <td class="time-cell">08:00 - 11:00</td>
+                            <td class="time-cell">15:00 - 18:00</td>
+                            <td class="time-cell">09:00 - 12:00</td>
+                            <td class="time-cell">17:00 - 20:00</td>
+                            <td class="time-cell">14:00 - 17:00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <a href="structure.html" class="btn btn-green">Вернуться на главную страницу</a>
+        </section>
+        
+    </main>
+    
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p class="footer-logo">Поликлиника</p>
+            <nav class="footer-nav">
+                <a href="Политика обработки персональных данных.pdf">Политика обработки персональных данных</a>
+            </nav>
+            <div class="copyright">
+                <p>© 2025 Поликлиника. Все права защищены.</p>
+                <p>Лицензия БР-77-01-000000</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
