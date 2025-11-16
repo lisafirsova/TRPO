@@ -62,3 +62,57 @@ with sqlite3.connect("polic.db") as con:
 
     con.commit()
     print("БД успешно создано")
+
+
+def get_users():
+    with sqlite3.connect("polic.db") as con:
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        cursor.execute("""
+        SELECT d.name AS doctor_name,
+        d.photo AS doctor_photo,
+        s.name AS spec_name
+        FROM doctors d
+        JOIN specialize s ON d.id_spec = s.id
+    """)
+        doctors = cursor.fetchall()
+    return doctors
+
+def get_schedule():
+    with sqlite3.connect("polic.db") as con:
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+        cur.execute("""
+            SELECT 
+                d.nom_cab AS cabinet,
+                d.name AS doctor_name,
+                s.name AS specialty,
+                ws.monday, ws.tuesday, ws.wednesday, ws.thursday, ws.friday
+            FROM doctors d
+            JOIN specialize s ON d.id_spec = s.id
+            LEFT JOIN work_schedule ws ON ws.id_doctor = d.id
+            ORDER BY s.name, d.nom_cab
+        """)
+        data = cur.fetchall()
+    return data
+
+def get_appointment():
+    with sqlite3.connect("polic.db") as con:
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+        cur.execute("""
+            SELECT 
+                d.name AS doctor_name,
+                s.name AS spec_name
+            FROM doctors d
+            JOIN specialize s ON d.id_spec = s.id
+        """)
+        data = [dict(row) for row in cur.fetchall()]
+    doctors_data = [{"doctor_name": row["doctor_name"], "spec_name": row["spec_name"]} for row in data]
+
+    specialties = sorted(list({row['spec_name'] for row in data}))
+    return doctors_data, specialties
+
+
+
+
