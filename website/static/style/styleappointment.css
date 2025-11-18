@@ -1,0 +1,334 @@
+:root {
+    --bg-color: #F5F7FA;
+    --text-color: #2D2D2D;
+    --card-bg: #FFFFFF;
+    --dark-bg: #2D2D2D;
+    --primary-color: #4ba3ff;
+    --secondary-color: #3CCF91;
+    --shadow-color: rgba(0, 0, 0, 0.25);
+}
+
+.appointment-section {
+    padding: 60px 2%;
+    background-color: var(--card-bg);
+    margin: 40px 2%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+}
+
+/* ================== */
+/* 2. СЕЛЕКТОРЫ */
+/* ================== */
+.selector-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 40px;
+    padding: 0 20px;
+}
+
+.selector-group {
+    flex-grow: 1;
+    min-width: 300px;
+}
+
+.selector-group label {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.app-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: var(--bg-color);
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.1s;
+}
+
+.app-select:hover {
+    border-color: var(--secondary-color);
+}
+
+/* ================== */
+/* 3. КАЛЕНДАРЬ */
+/* ================== */
+.slots-heading {
+    text-align: center;
+    color: var(--dark-bg);
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+}
+
+.date-time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    gap: 20px;
+    padding: 20px;
+    background-color: #f7f9fc;
+    border-radius: 15px;
+}
+
+.day-card {
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid var(--primary-color);
+}
+
+.day-header {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--dark-bg);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.time-slot {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 5px;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.time-slot:hover {
+    background-color: #35b380;
+    transform: translateY(-2px);
+}
+
+.time-slot.booked {
+    background-color: #ccc;
+    cursor: default;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.doctor-info-small {
+    display: block;
+    font-size: 0.8rem;
+    color: #333;
+    margin-top: 5px;
+}
+
+.loading-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* ================== */
+/* 4. ОВЕРЛЭЙ*/
+/* ================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    visibility: hidden; /* Изначально скрыто */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 2rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #666;
+}
+
+.slot-info {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border-left: 4px solid var(--primary-color);
+    border-radius: 5px;
+}
+
+.slot-info p {
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.patient-form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.patient-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.modal-submit-btn {
+    width: 100%;
+    margin-top: 20px;
+    height: 50px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+}
+@media (max-width: 768px) {
+    .selector-container {
+        flex-direction: column;
+        padding: 0;
+    }
+    .date-time-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* ================== */
+/* ВРАЩЕНИЕ ИКОНКИ ТЕМЫ */
+/* ================== */
+#settings-icon {
+    transition: transform 0.5s ease-in-out;
+}
+.rotated {
+    transform: rotate(180deg);
+}
+/* ================== */
+/* ТЕМНАЯ ТЕМА (DARK MODE) */
+/* ================== */
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #E0E0E0;
+    --card-bg: #1E1E1E;
+    --dark-bg: #E0E0E0;
+    --shadow-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+body.dark-mode .main-header {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+body.dark-mode .app-select:hover {
+    border-color: var(--secondary-color);
+}
+body.dark-mode .logo-title,
+body.dark-mode .section-heading,
+body.dark-mode .slots-heading,
+body.dark-mode .day-header {
+    color: var(--text-color);
+}
+body.dark-mode .appointment-section,
+body.dark-mode .day-card {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 5px var(--shadow-color);
+    border-left-color: var(--primary-color);
+}
+body.dark-mode .main-footer {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 40px 2%;
+    text-align: center;
+}
+body.dark-mode .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+body.dark-mode .footer-logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+body.dark-mode .footer-nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+body.dark-mode .footer-nav a:hover {
+    color: var(--primary-color);
+}
+body.dark-mode .copyright {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #ccc;
+}
+body.dark-mode .copyright p {
+    margin: 5px 0;
+}
+body.dark-mode .date-time-grid {
+    background-color: #2c2c2c;
+}
+
+body.dark-mode .selector-group label {
+    color: var(--primary-color);
+}
+
+body.dark-mode .app-select {
+    background-color: #2c2c2c;
+    color: var(--text-color);
+    border-color: var(--primary-color);
+}
+
+body.dark-mode .modal-content {
+    background-color: #333;
+}
+
+body.dark-mode .slot-info {
+    background-color: #3e3e3e;
+    border-left-color: var(--primary-color);
+}
+body.dark-mode .patient-form input {
+    background-color: #2c2c2c;
+    color: var(--text-color);
+    border: 1px solid #555;
+}
+body.dark-mode .nav-icon {
+    filter: invert(1); 
+    transition: filter 0.3s ease;
+}
+body.dark-mode #settings-icon {
+    filter: invert(1);
+}
+body.dark-mode .nav-link.active .nav-icon {
+    filter: invert(1);
+}

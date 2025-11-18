@@ -1,0 +1,441 @@
+:root {
+            --bg-color: #F5F7FA;
+            --text-color: #2D2D2D;
+            --card-bg: #FFFFFF;
+            --dark-bg: #2D2D2D;
+            --primary-color: #4ba3ff;
+            --secondary-color: #3CCF91;
+            --shadow-color: rgba(0, 0, 0, 0.25);
+            --icon-color: #7b917b;
+            font-size: 16px;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            font-size: clamp(14px, 1.5vw, 18px);
+            padding-bottom: 0;
+        }
+        
+        main {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            margin-top: 0;
+        }
+        
+        .section-heading {
+            font-size: clamp(30px, 4vw, 55px);
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        /* СТИЛИ HEADER */
+        .main-header {
+            width: 100%;
+            height: clamp(100px, 8vw, 140px);
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-title {
+            font-size: clamp(30px, 4vw, 61px);
+            font-weight: bold;
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .nav-icons {
+            display: flex;
+            gap: clamp(20px, 3vw, 50px);
+            align-items: center;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-icon {
+            width: clamp(40px, 4vw, 70px);
+            height: clamp(40px, 4vw, 70px);
+            cursor: pointer;
+            background-color: transparent !important;
+            transition: transform 0.2s;
+        }
+        
+        .nav-icon:hover, .nav-link:focus .nav-icon {
+            transform: scale(1.1);
+        }
+        
+        .nav-link.active .nav-icon {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: clamp(18px, 2.5vw, 32px);
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 5px 5px 4px var(--shadow-color);
+            transition: transform 0.2s, background-color 0.2s;
+            color: var(--card-bg);
+            text-decoration: none;
+        }
+        
+        .btn-green {
+            background-color: var(--secondary-color);
+            width: clamp(200px, 40vw, 650px);
+            height: clamp(50px, 8vw, 100px);
+            margin: 40px auto;
+            text-align: center;
+        }
+        
+        .btn-green:hover {
+            background-color: #35b380;
+        }
+        
+        .schedule-section {
+            padding: 60px 2%;
+            background-color: var(--card-bg);
+            margin: 40px 2%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+        }
+        
+        .schedule-table-wrapper {
+            overflow-x: auto;
+            margin: 40px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            min-width: 1000px;
+        }
+        
+        .schedule-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+        
+        .schedule-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .schedule-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .department-header {
+            background-color: var(--dark-bg) !important;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .department-header td {
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .cabinet-cell {
+            font-weight: bold;
+            background-color: #f0f8ff;
+        }
+        
+        .name-cell {
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .position-cell {
+            text-align: left;
+        }
+        
+        .time-cell {
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .status-cell {
+            font-weight: bold;
+        }
+        
+        .status-active {
+            color: var(--secondary-color);
+        }
+        
+        .main-footer {
+            background-color: var(--dark-bg);
+            color: var(--card-bg);
+            padding: 40px 2%;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .footer-nav a {
+            color: var(--card-bg);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        
+        .footer-nav a:hover {
+            color: var(--primary-color);
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+        
+        .copyright p {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-icons {
+                gap: 15px;
+            }
+            
+            .logo-title {
+                padding-left: 10px;
+            }
+            
+            .schedule-section {
+                margin: 20px 2%;
+                padding: 30px 2%;
+            }
+            
+            .schedule-table th, .schedule-table td {
+                padding: 8px 5px;
+                font-size: 0.85rem;
+            }
+            
+            .department-header td {
+                padding: 10px;
+                font-size: 1rem;
+            }
+        }
+/* ================== */
+/* ВРАЩЕНИЕ ИКОНКИ ТЕМЫ */
+/* ================== */
+#settings-icon {
+    transition: transform 0.5s ease-in-out;
+}
+.rotated {
+    transform: rotate(180deg);
+}
+/* ================== */
+/* ТЕМНАЯ ТЕМА (DARK MODE) */
+/* ================== */
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #E0E0E0;
+    --card-bg: #1E1E1E;
+    --dark-bg: #E0E0E0; /* Теперь используется для фона заголовков отделений */
+    --primary-color: #4ba3ff; /* Синий остается для акцентов */
+    --secondary-color: #3CCF91; /* Зеленый остается для акцентов */
+    --shadow-color: rgba(255, 255, 255, 0.15); /* Более заметная тень для темной темы */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+body.dark-mode .main-header {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+body.dark-mode .app-select:hover {
+    border-color: var(--secondary-color);
+}
+body.dark-mode .logo-title,
+body.dark-mode .section-heading,
+body.dark-mode .slots-heading,
+body.dark-mode .day-header {
+    color: var(--text-color);
+}
+
+/* --- Стили для секции Расписания --- */
+
+body.dark-mode .schedule-section {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+body.dark-mode .schedule-table-wrapper {
+    box-shadow: 0 4px 8px var(--shadow-color); /* Обновленная тень */
+}
+
+body.dark-mode .schedule-table {
+    background-color: var(--card-bg);
+}
+
+body.dark-mode .schedule-table th {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid #333; /* Более темная граница */
+}
+
+body.dark-mode .schedule-table td {
+    border: 1px solid #333; /* Более темная граница */
+    color: var(--text-color);
+}
+
+body.dark-mode .schedule-table tr:nth-child(even) {
+    background-color: #252525; /* Темный фон для четных строк */
+}
+
+body.dark-mode .schedule-table tr:hover {
+    background-color: #383838; /* Более темный фон при наведении */
+}
+
+body.dark-mode .department-header {
+    background-color: #444 !important; /* Оттенок для заголовка отделения */
+    color: white;
+}
+
+body.dark-mode .department-header td {
+    color: white; /* Убедимся, что текст белый */
+}
+
+body.dark-mode .cabinet-cell {
+    background-color: #2c2c2c; /* Оттенок для номера кабинета */
+}
+
+body.dark-mode .status-active {
+    color: var(--secondary-color); /* Сохраняем зеленый для активного статуса */
+}
+
+
+/* --- Остальные стили для Темной Темы --- */
+
+body.dark-mode .appointment-section,
+body.dark-mode .day-card {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 5px var(--shadow-color);
+    border-left-color: var(--primary-color);
+}
+body.dark-mode .main-footer {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 40px 2%;
+    text-align: center;
+}
+body.dark-mode .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+body.dark-mode .footer-logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+body.dark-mode .footer-nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+body.dark-mode .footer-nav a:hover {
+    color: var(--primary-color);
+}
+body.dark-mode .copyright {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #ccc;
+}
+body.dark-mode .copyright p {
+    margin: 5px 0;
+}
+body.dark-mode .date-time-grid {
+    background-color: #2c2c2c;
+}
+
+body.dark-mode .selector-group label {
+    color: var(--primary-color);
+}
+
+body.dark-mode .app-select {
+    background-color: #2c2c2c;
+    color: var(--text-color);
+    border-color: var(--primary-color);
+}
+
+body.dark-mode .modal-content {
+    background-color: #333;
+}
+
+body.dark-mode .slot-info {
+    background-color: #3e3e3e;
+    border-left-color: var(--primary-color);
+}
+body.dark-mode .patient-form input {
+    background-color: #2c2c2c;
+    color: var(--text-color);
+    border: 1px solid #555;
+}
+body.dark-mode .nav-icon {
+    filter: invert(1); 
+    transition: filter 0.3s ease;
+}
+body.dark-mode #settings-icon {
+    filter: invert(1);
+}
+body.dark-mode .nav-link.active .nav-icon {
+    filter: invert(1);
+}

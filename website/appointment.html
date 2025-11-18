@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись на прием</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/styleappointment.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"> 
+</head>
+<script id="doctors-data" type="application/json">
+    {{ doctors_data|tojson }}
+</script>
+
+<body>
+    <main>
+        <header class="main-header">
+      <h1 class="logo-title">Поликлиника</h1>
+      <nav class="nav-icons">
+        <a href="{{ url_for('index') }}" class="nav-link">
+          <img class="nav-icon" src="{{ url_for('static', filename='img/GrayHome.png') }}" alt="Главная">
+        </a>
+        <a href="{{ url_for('schedule') }}" class="nav-link">
+          <img class="nav-icon" src="{{ url_for('static', filename='img/Calendar.png') }}" alt="Расписание">
+        </a>
+        <a href="#" class="nav-link active">
+          <img class="nav-icon" src="{{ url_for('static', filename='img/BlackClock.png') }}" alt="Услуги">
+        </a>
+        <a href="#" id="theme-toggle" class="nav-link">
+          <img id="settings-icon" class="nav-icon" src="{{ url_for('static', filename='img/settings.png') }}" alt="Сменить тему">
+        </a>
+      </nav>
+    </header>
+
+        <section class="appointment-section">
+            <h2 class="section-heading">Записаться на прием</h2>
+
+            <div class="selector-container">
+                <div class="selector-group">
+                    <label for="specialty-select">Выберите специальность:</label>
+                    <select id="specialty-select" class="app-select">
+                        <option value="">Выберите специальность</option>
+                        {% for spec in specialties %}
+                            <option value="{{ spec }}">{{ spec }}</option>
+                            {% endfor %}
+                    </select>
+                </div>
+
+                <div class="selector-group">
+                    <label for="doctor-select">Выберите врача:</label>
+                    <select id="doctor-select" class="app-select">
+                        <option value="">Выберите врача</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="time-slots-container">
+                <h3 class="slots-heading">Выберите дату и время:</h3>
+                <div id="date-time-grid" class="date-time-grid">
+                    <p class="loading-message">Загрузка расписания...</p>
+                </div>
+            </div>
+
+        </section>
+        
+            <footer class="main-footer">
+        <div class="footer-content">
+            <p class="footer-logo">Поликлиника</p>
+            <nav class="footer-nav">
+                <a href="{{url_for('static',filename='img/politics.pdf')}}">
+                    Политика обработки персональных данных
+                </a>
+            </nav>
+            <div class="copyright">
+                <p>© 2025 Поликлиника. Все права защищены.</p>
+                <p>Лицензия БР-77-01-000000</p>
+            </div>
+        </div>
+    </footer>
+    </main>
+
+    <div id="booking-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <h3>Подтверждение записи</h3>
+            <div id="slot-info" class="slot-info">
+                </div>
+            
+            <form id="patient-form" class="patient-form">
+                <label for="fio">ФИО:</label>
+                <input type="text" id="fio" name="fio" required placeholder="Иванов Иван Иванович">
+                
+                <label for="dob">Дата рождения:</label>
+                <input type="date" id="dob" name="dob" required>
+                
+                <label for="phone">Контактный телефон:</label>
+                <input type="tel" id="phone" name="phone" required placeholder="+7 (XXX) XXX-XX-XX">
+                
+                <label for="email">Электронная почта:</label>
+                <input type="email" id="email" name="email" required placeholder="example@mail.ru">
+                
+                <button type="submit" class="btn btn-green modal-submit-btn">Готово (Подтвердить запись)</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='scripts/theme-loader.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/scriptappointment.js') }}"></script>
+</body>
+</html>

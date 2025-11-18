@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showSlide(currentSlide);
         setInterval(() => {
             showSlide(currentSlide + 1);
-        }, 5000); 
+        }, 2000); 
     }
     
 });
