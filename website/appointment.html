@@ -94,15 +94,23 @@
                 <input type="date" id="dob" name="dob" required>
                 
                 <label for="phone">Контактный телефон:</label>
-                <input type="tel" id="phone" name="phone" required placeholder="+7 (XXX) XXX-XX-XX">
+                <input type="tel" id="phone" name="phone" required placeholder="+375 (XX) XXX-XX-XX">
                 
                 <label for="email">Электронная почта:</label>
                 <input type="email" id="email" name="email" required placeholder="example@mail.ru">
                 
-                <button type="submit" class="btn btn-green modal-submit-btn">Готово (Подтвердить запись)</button>
+                <button type="submit" class="btn btn-green modal-submit-btn">Подтвердить запись</button>
             </form>
         </div>
     </div>
+    <div id="code-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-modal-btn">&times;</button>
+        <h3 align="center">Введите код подтверждения</h3>
+        <input type="text" id="code-input" placeholder="6-значный код" maxlength="6" height="10">
+        <button id="confirm-code-btn" class="btn btn-green">Подтвердить</button>
+    </div>
+</div>
     <script src="{{ url_for('static', filename='scripts/theme-loader.js') }}"></script>
     <script src="{{ url_for('static', filename='scripts/scriptappointment.js') }}"></script>
 </body>
