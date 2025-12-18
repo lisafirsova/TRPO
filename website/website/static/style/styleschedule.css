@@ -13,6 +13,14 @@
         html {
             scroll-behavior: smooth;
         }
+        .logo-link:hover,
+        .logo-link:focus {
+            text-decoration: none;
+        }
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+        }
         
         body {
             margin: 0;
@@ -113,8 +121,8 @@
         
         .btn-green {
             background-color: var(--secondary-color);
-            width: clamp(200px, 40vw, 650px);
-            height: clamp(50px, 8vw, 100px);
+            width: clamp(280px, 40vw, 850px);
+            height: clamp(40px, 7vw, 60px);
             margin: 40px auto;
             text-align: center;
         }
@@ -287,10 +295,10 @@ body.dark-mode {
     --bg-color: #121212;
     --text-color: #E0E0E0;
     --card-bg: #1E1E1E;
-    --dark-bg: #E0E0E0; /* Теперь используется для фона заголовков отделений */
-    --primary-color: #4ba3ff; /* Синий остается для акцентов */
-    --secondary-color: #3CCF91; /* Зеленый остается для акцентов */
-    --shadow-color: rgba(255, 255, 255, 0.15); /* Более заметная тень для темной темы */
+    --dark-bg: #E0E0E0;
+    --primary-color: #4ba3ff;
+    --secondary-color: #3CCF91;
+    --shadow-color: rgba(255, 255, 255, 0.15);
     background-color: var(--bg-color);
     color: var(--text-color);
 }
@@ -308,16 +316,13 @@ body.dark-mode .slots-heading,
 body.dark-mode .day-header {
     color: var(--text-color);
 }
-
-/* --- Стили для секции Расписания --- */
-
 body.dark-mode .schedule-section {
     background-color: var(--card-bg);
     box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 body.dark-mode .schedule-table-wrapper {
-    box-shadow: 0 4px 8px var(--shadow-color); /* Обновленная тень */
+    box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 body.dark-mode .schedule-table {
@@ -327,41 +332,38 @@ body.dark-mode .schedule-table {
 body.dark-mode .schedule-table th {
     background-color: var(--primary-color);
     color: white;
-    border: 1px solid #333; /* Более темная граница */
+    border: 1px solid #333;
 }
 
 body.dark-mode .schedule-table td {
-    border: 1px solid #333; /* Более темная граница */
+    border: 1px solid #333;
     color: var(--text-color);
 }
 
 body.dark-mode .schedule-table tr:nth-child(even) {
-    background-color: #252525; /* Темный фон для четных строк */
+    background-color: #252525;
 }
 
 body.dark-mode .schedule-table tr:hover {
-    background-color: #383838; /* Более темный фон при наведении */
+    background-color: #383838;
 }
 
 body.dark-mode .department-header {
-    background-color: #444 !important; /* Оттенок для заголовка отделения */
+    background-color: #444 !important;
     color: white;
 }
 
 body.dark-mode .department-header td {
-    color: white; /* Убедимся, что текст белый */
+    color: white;
 }
 
 body.dark-mode .cabinet-cell {
-    background-color: #2c2c2c; /* Оттенок для номера кабинета */
+    background-color: #2c2c2c;
 }
 
 body.dark-mode .status-active {
-    color: var(--secondary-color); /* Сохраняем зеленый для активного статуса */
+    color: var(--secondary-color);
 }
-
-
-/* --- Остальные стили для Темной Темы --- */
 
 body.dark-mode .appointment-section,
 body.dark-mode .day-card {

@@ -9,7 +9,9 @@
 <body>
   <main>
     <header class="main-header">
-      <h1 class="logo-title">Поликлиника</h1>
+      <a href="{{ url_for('doctor') }}" class="logo-link">
+        <h1 class="logo-title">Поликлиника</h1>
+      </a>
       <nav class="nav-icons">
         <a href="#" class="nav-link active">
           <img class="nav-icon" src="{{ url_for('static', filename='img/Home.png') }}" alt="Главная">
@@ -120,7 +122,61 @@
           <p>Консультации и малоинвазивные операции.</p>
         </div>
       </div>
-      <button class="btn btn-primary full-list-btn">Посмотреть полный список услуг</button>
+      
+      <div id="more-services" class="more-services" aria-hidden="true">
+        <div class="services-grid">
+          <div class="service-category">
+            <div class="service-icon-wrapper">
+              <img class="service-icon-img" src="{{ url_for('static', filename='img/glasses.png') }}" alt="Офтальмология">
+            </div>
+            <h3>Офтальмология</h3>
+            <p>Лечение глазных заболеваний, подбор очков и линз.</p>
+          </div>
+
+          <div class="service-category">
+            <div class="service-icon-wrapper">
+              <img class="service-icon-img" src="{{ url_for('static', filename='img/uterus.png') }}" alt="Гастроэнтерология">
+            </div>
+            <h3>Гинекология</h3>
+            <p>Диагностика и лечение гинекологических заболеваний.</p>
+          </div>
+
+          <div class="service-category">
+            <div class="service-icon-wrapper">
+              <img class="service-icon-img" src="{{ url_for('static', filename='img/endo.png') }}" alt="Эндокринология">
+            </div>
+            <h3>Эндокринология</h3>
+            <p>Консультации и лечение гормональных заболеваний.</p>
+          </div>
+
+          <div class="service-category">
+            <div class="service-icon-wrapper">
+              <img class="service-icon-img" src="{{ url_for('static', filename='img/rash.png') }}" alt="Дерматология">
+            </div>
+            <h3>Дерматология</h3>
+            <p>Лечение заболеваний кожи и косметологические процедуры.</p>
+          </div>
+
+          <div class="service-category">
+            <div class="service-icon-wrapper">
+              <img class="service-icon-img" src="{{ url_for('static', filename='img/children.png') }}" alt="Педиатрия">
+            </div>
+            <h3>Педиатрия</h3>
+            <p>Прием детей, вакцинация и наблюдение развития.</p>
+          </div>
+
+          <div class="service-category">
+            <div class="service-icon-wrapper">
+              <img class="service-icon-img" src="{{ url_for('static', filename='img/urology.png') }}" alt="Урология">
+            </div>
+            <h3>Урология</h3>
+            <p>Диагностика и лечение заболеваний мочеполовой системы.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary full-list-btn" aria-controls="more-services" aria-expanded="false">Посмотреть полный список услуг</button>
+      <button class="btn btn-small hide-list-btn" aria-controls="more-services" aria-expanded="true">Скрыть полный список услуг</button>
     </section>
 
     <section class="top-specialists-section" id="doctors">
@@ -190,7 +246,30 @@
     </section>
 
   </main>
-  
+  <div id="booking-toast" class="booking-toast" aria-live="polite" aria-atomic="true" hidden></div>
+  <script>
+    (function(){
+      try {
+        const raw = sessionStorage.getItem('bookingNotification');
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        sessionStorage.removeItem('bookingNotification');
+
+        const toast = document.getElementById('booking-toast');
+        if (!toast) return;
+        toast.textContent = data.text || '';
+        toast.classList.add(data.type === 'success' ? 'success' : 'error');
+        toast.hidden = false;
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => { toast.hidden = true; toast.classList.remove('success','error'); toast.textContent = ''; }, 400);
+        }, 15000);
+      } catch(e) {
+        console.error('booking-toast error', e);
+      }
+    })();
+  </script>
   <footer class="main-footer">
     <div class="footer-content">
         <p class="footer-logo">Поликлиника</p>

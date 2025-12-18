@@ -17,6 +17,14 @@
 html {
     scroll-behavior: smooth;
 }
+.logo-link:hover,
+.logo-link:focus {
+    text-decoration: none;
+}
+.logo-link {
+    text-decoration: none;
+    color: inherit;
+}
 
 body {
     margin: 0;
@@ -121,7 +129,7 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     width: clamp(280px, 40vw, 850px);
-    height: clamp(70px, 8vw, 150px);
+    height: clamp(70px, 8vw, 20px);
     padding: 12px 20px;
     border-radius: 40px;
     font-size: clamp(18px, 2.5vw, 32px);
@@ -299,6 +307,19 @@ h1, h2, h3 {
     margin: 40px auto 0;
 }
 
+.services-section .services-grid {
+    margin-bottom: 10px;
+}
+
+.service-category {
+    position: relative;
+    z-index: 2;
+}
+.more-services {
+    position: relative;
+    z-index: 1;
+}
+
 .service-category {
     padding: 25px;
     border-radius: 15px;
@@ -332,6 +353,42 @@ h1, h2, h3 {
     font-size: 1.8rem;
     color: var(--primary-color);
     margin-bottom: 10px;
+}
+
+.more-services {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.6s cubic-bezier(.2,.8,.2,1), opacity 0.4s ease, transform 0.4s ease;
+}
+.more-services .services-grid {
+    padding-top: 20px;
+}
+.more-services.show {
+    max-height: 2000px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hide-list-btn {
+    margin: 90px auto 20px;
+    display: none;
+    width: clamp(250px, 30vw, 450px);
+    height: clamp(50px, 6vw, 70px);
+    font-size: clamp(16px, 1.5vw, 24px);
+    border-radius: 40px;
+    background-color: var(--primary-color);
+    color: var(--card-bg);
+    box-shadow: 5px 5px 4px var(--shadow-color);
+    align-items: center;
+    justify-content: center;
+}
+.hide-list-btn:hover {
+    background-color: #3b88d8;
+}
+.full-list-btn[aria-expanded="true"] {
+    display: none;
 }
 
 /* ==================================== */
@@ -671,7 +728,7 @@ body.dark-mode .dot.active-dot {
 body.dark-mode .service-category,
 body.dark-mode .advantage-item,
 body.dark-mode .specialist-card {
-    background-color: #2c2c2c; /* Темный фон для карточек */
+    background-color: #2c2c2c;
     box-shadow: 5px 5px 4px var(--shadow-color);
 }
 body.dark-mode .service-category h3,
@@ -758,4 +815,44 @@ body.dark-mode .service-icon-img,
 body.dark-mode .advantages-icon-img {
     filter: invert(1); 
     transition: filter 0.3s ease; 
+}
+.booking-toast {
+    position: fixed;
+    top: calc(var(--header-height) + 16px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: var(--primary-color);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    z-index: 3000;
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    font-weight: 600;
+    min-width: 260px;
+    text-align: center;
+}
+.booking-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.booking-toast.success {
+    background: linear-gradient(90deg, var(--primary-color), #2f8fe6);
+}
+.booking-toast.error {
+    background: linear-gradient(90deg, #ff6b6b, #ff4c4c);
+}
+
+@media (max-width: 768px) {
+    .booking-toast { top: calc(var(--header-height) + 8px); left: 16px; transform: none; right: 16px; width: auto; }
+}
+.modal-content .modal-submit-btn {
+    display: block;
+    width: clamp(200px, 45%, 320px);
+    max-width: 90%;
+    margin: 20px auto 0;
+    height: 48px;
+    font-size: 1.05rem;
+    padding: 0 16px;
 }

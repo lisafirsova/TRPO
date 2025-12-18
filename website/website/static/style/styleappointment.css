@@ -69,7 +69,7 @@
 .date-time-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-    gap: 20px;
+    gap: 32px;
     padding: 20px;
     background-color: #f7f9fc;
     border-radius: 15px;
@@ -93,28 +93,95 @@
 }
 
 .time-slot {
-    display: inline-block;
-    padding: 8px 12px;
-    margin: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    margin: 8px;
+    min-width: 110px;
     background-color: var(--secondary-color);
-    color: white;
-    border-radius: 5px;
+    color: #ffffff;
+    border-radius: 30px;
     cursor: pointer;
-    font-size: 0.95rem;
-    transition: background-color 0.2s, transform 0.1s;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    box-shadow: 5px 6px 10px rgba(0,0,0,0.08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .time-slot:hover {
+    transform: translateY(-4px);
     background-color: #35b380;
-    transform: translateY(-2px);
+    box-shadow: 8px 10px 18px rgba(0,0,0,0.12);
+}
+
+.time-slot:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(75,163,255,0.15);
 }
 
 .time-slot.booked {
-    background-color: #ccc;
+    background-color: #e0e0e0;
+    color: #8a8a8a;
     cursor: default;
-    opacity: 0.6;
+    opacity: 0.9;
     pointer-events: none;
+    transform: none;
+    box-shadow: none;
 }
+
+.slot-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3px 4px;
+}
+.slot-doctor {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #333;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.time-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px 6px;
+    align-items: start;
+}
+@media (max-width: 768px) {
+    .time-list {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 1100px) {
+    .time-list {
+        grid-template-columns: 1fr;
+    }
+    .slot-wrapper {
+        margin: 4px 6px;
+    }
+    .slot-wrapper .time-slot {
+        width: clamp(100px, 90%, 160px);
+        padding: 8px 14px;
+        font-size: 0.95rem;
+        min-width: 90px;
+    }
+    .date-time-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 22px;
+        padding: 16px;
+    }
+}
+
+.slot-wrapper .time-slot {
+    width: clamp(110px, 80%, 170px);
+}
+
 
 .doctor-info-small {
     display: block;
@@ -145,16 +212,14 @@
     justify-content: center;
     align-items: center;
     z-index: 2000;
-    visibility: hidden; /* Изначально скрыто */
+    visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s;
 }
-
 .modal-overlay.visible {
     visibility: visible;
     opacity: 1;
 }
-
 .modal-content {
     background-color: var(--card-bg);
     padding: 30px;
@@ -164,7 +229,6 @@
     position: relative;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
-
 .close-modal-btn {
     position: absolute;
     top: 15px;
@@ -175,7 +239,6 @@
     cursor: pointer;
     color: #666;
 }
-
 .slot-info {
     margin-bottom: 20px;
     padding: 15px;
@@ -183,19 +246,16 @@
     border-left: 4px solid var(--primary-color);
     border-radius: 5px;
 }
-
 .slot-info p {
     margin: 5px 0;
     font-weight: 500;
 }
-
 .patient-form label {
     display: block;
     margin-top: 15px;
     margin-bottom: 5px;
     font-weight: 600;
 }
-
 .patient-form input {
     width: 100%;
     padding: 10px;
@@ -204,13 +264,15 @@
     border-radius: 5px;
     box-sizing: border-box;
 }
-
 .modal-submit-btn {
-    width: 100%;
-    margin-top: 20px;
-    height: 50px;
-    font-size: 1.2rem;
+    display: block;
+    width: clamp(200px, 45%, 320px);
+    max-width: 90%;
+    margin: 20px auto 0;
+    height: 48px;
+    font-size: 1.05rem;
     border-radius: 10px;
+    padding: 0 16px;
 }
 @media (max-width: 768px) {
     .selector-container {
@@ -331,4 +393,51 @@ body.dark-mode #settings-icon {
 }
 body.dark-mode .nav-link.active .nav-icon {
     filter: invert(1);
+}
+#code-modal .modal-content input#code-input {
+    display: block;
+    margin: 12px auto;
+    width: clamp(120px, 28%, 180px);
+    font-size: 1.05rem;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#code-modal .modal-content button#confirm-code-btn {
+    display: block;
+    margin: 12px auto 0;
+    width: clamp(160px, 40%, 260px);
+    max-width: 90%;
+    height: 44px;
+    font-size: 1rem;
+    border-radius: 10px;
+    padding: 0 14px;
+}
+#code-modal .modal-content button#confirm-code-btn {
+    background: var(--secondary-color);
+    color: var(--card-bg);
+    border: none;
+    box-shadow: 5px 6px 10px rgba(0,0,0,0.08);
+    font-weight: 700;
+    transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.12s ease;
+}
+#code-modal .modal-content button#confirm-code-btn:hover {
+    background: #30b173;
+    transform: translateY(-2px);
+    box-shadow: 8px 10pxЫ 18px rgba(0,0,0,0.12);
+}
+#code-modal .modal-content button#confirm-code-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(60,207,145,0.15);
+}
+body.dark-mode #code-modal .modal-content button#confirm-code-btn {
+    background: linear-gradient(90deg, #2b7a58, #236a4a);
+    color: var(--card-bg);
+    box-shadow: 5px 6px 12px rgba(0,0,0,0.35);
+}
+body.dark-mode #code-modal .modal-content button#confirm-code-btn:hover {
+    background: linear-gradient(90deg, #286f4f, #1f5f43);
 }

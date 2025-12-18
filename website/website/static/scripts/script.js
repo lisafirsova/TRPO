@@ -52,4 +52,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000); 
     }
     
+    const fullListBtn = document.querySelector('.full-list-btn');
+    const hideListBtn = document.querySelector('.hide-list-btn');
+    const moreServices = document.getElementById('more-services');
+
+    if (fullListBtn && moreServices) {
+        fullListBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moreServices.classList.add('show');
+            moreServices.setAttribute('aria-hidden', 'false');
+            fullListBtn.setAttribute('aria-expanded', 'true');
+            if (hideListBtn) hideListBtn.style.display = 'block';
+            setTimeout(() => {
+                moreServices.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 60);
+        });
+    }
+
+    if (hideListBtn && moreServices) {
+        hideListBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moreServices.classList.remove('show');
+            moreServices.setAttribute('aria-hidden', 'true');
+            fullListBtn.setAttribute('aria-expanded', 'false');
+            hideListBtn.style.display = 'none';
+            setTimeout(() => {
+                const servicesHeading = document.querySelector('.services-section .section-heading');
+                if (servicesHeading) servicesHeading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 60);
+        });
+    }
 });
