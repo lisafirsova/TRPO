@@ -1,6 +1,8 @@
 import sqlite3
 from datetime import datetime, timedelta
 import re
+import os
+
 
 APPOINTMENT_INTERVAL_MINUTES = 30
 SLOTS_DAYS_AHEAD = 14
@@ -118,19 +120,6 @@ def init_db(con: sqlite3.Connection):
                     name TEXT NOT NULL,
                     nom INTEGER,
                     id_card INTEGER)""")
-    cur.execute("INSERT OR IGNORE INTO pacient VALUES(1,'Сергеев Альберт Альбертович',80295647812,1)")
-    cur.execute("INSERT OR IGNORE INTO pacient VALUES(2,'Миско Александр Сергеевич',80297817399,2)")
-    cur.execute("INSERT OR IGNORE INTO pacient VALUES(3,'Сватко Игорь Борисович',80291234354,3)")
-
-    cur.execute("""CREATE TABLE IF NOT EXISTS med_card (
-                    id_card INTEGER PRIMARY KEY AUTOINCREMENT,
-                    id_pac INTEGER UNIQUE,
-                    spisok_zabol TEXT,
-                    FOREIGN KEY (id_pac) REFERENCES pacient(id_pac)
-                )""")
-    cur.execute("INSERT OR IGNORE INTO med_card VALUES(1,1,'Грипп 20.03.2020, COVID-19 25.04.2021')")
-    cur.execute("INSERT OR IGNORE INTO med_card VALUES(2,2,'Язва желудка 12.03.2023')")
-    cur.execute("INSERT OR IGNORE INTO med_card VALUES(3,3,'Аппендицит 25.08.2025')")
 
     cur.execute("""CREATE TABLE IF NOT EXISTS schedule (
                     id_rasp INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -271,11 +260,13 @@ def get_ScheduleTalon(con, doctor_id):
         ORDER BY sch.data_priema, sch.time_priema;
     """, (doctor_id,))
     return [dict(row) for row in cur.fetchall()]
+
 def check_doctor_login(con, doctor_id, password):
     con.row_factory = sqlite3.Row
     cur = con.cursor()
     cur.execute("SELECT id, name FROM doctors WHERE id = ? AND password = ?", (doctor_id, password))
     return cur.fetchone()
+
 def book_slot(con: sqlite3.Connection, id_pac: int, id_rasp: int) -> (bool, str):
     cur = con.cursor()
     cur.execute("SELECT id_rasp FROM schedule WHERE id_rasp = ?", (id_rasp,))
@@ -305,6 +296,27 @@ def mark_past_talons_as_passed(con: sqlite3.Connection):
     """, (today_str,))
     con.commit()
 
+def get_doctor_patients(con, doctor_id):
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+    cur.execute("""
+        SELECT 
+            sch.data_priema AS date, 
+            sch.time_priema AS time, 
+            p.name AS patient_name, 
+            p.nom AS phone
+        FROM schedule sch
+        JOIN talon t ON sch.id_rasp = t.id_slot
+        JOIN pacient p ON t.id_pac = p.id_pac
+        WHERE sch.id_doctor = ?
+        ORDER BY sch.data_priema ASC, sch.time_priema ASC
+    """, (doctor_id,))
+    return [dict(row) for row in cur.fetchall()]
+
+
 if __name__ == '__main__':
-    with sqlite3.connect("polic.db") as con:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(current_dir, "polic.db")
+    
+    with sqlite3.connect(db_path) as con:
         init_db(con)
