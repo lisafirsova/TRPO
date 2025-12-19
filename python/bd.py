@@ -90,20 +90,19 @@ def init_db(con: sqlite3.Connection):
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
                     nom_cab INTEGER,
-                    work_time TEXT,
                     id_spec INTEGER,
                     photo TEXT,
                     password TEXT,
                     FOREIGN KEY (id_spec) REFERENCES specialize(id)
                 )""")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(1,'Волокитин Тимофей',201,'8.00-14.00',2, 'doctor1.jpg','1ВТ')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(2,'Екатерина Мизулина',321,'14.00-20.00',1, 'doctor2.jpg','2ЕМ')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(3,'Акакий Харитонович',412,'8.00-14.00',3, 'doctor3.jpg','3АХ')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(4,'Азаркевич Никита',305,'10.00-16.00',4, 'doctor4.jpg','4АН')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(5,'Мария Смирнова',214,'9.00-15.00',2, 'doctor5.jpg','5МС')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(6,'Дмитрий Орлов',122,'12.00-18.00',3, 'doctor6.jpg','6ДО')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(7,'Наталья Петрова',301,'8.00-14.00',1, 'doctor7.jpg','7НП')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(8,'Игорь Беляев',220,'13.00-19.00',2, 'doctor8.jpg','8ИБ')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(1,'Волокитин Тимофей',201,2, 'doctor1.jpg','1ВТ')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(2,'Екатерина Мизулина',321,1, 'doctor2.jpg','2ЕМ')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(3,'Акакий Харитонович',412,3, 'doctor3.jpg','3АХ')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(4,'Азаркевич Никита',305,4, 'doctor4.jpg','4АН')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(5,'Мария Смирнова',214,2, 'doctor5.jpg','5МС')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(6,'Дмитрий Орлов',122,3, 'doctor6.jpg','6ДО')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(7,'Наталья Петрова',301,1, 'doctor7.jpg','7НП')")
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(8,'Игорь Беляев',220,2, 'doctor8.jpg','8ИБ')")
 
     cur.execute("""CREATE TABLE IF NOT EXISTS work_schedule (
                     id_ws INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -118,8 +117,7 @@ def init_db(con: sqlite3.Connection):
     cur.execute("""CREATE TABLE IF NOT EXISTS pacient (
                     id_pac INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
-                    nom INTEGER,
-                    id_card INTEGER)""")
+                    nom INTEGER)""")
 
     cur.execute("""CREATE TABLE IF NOT EXISTS schedule (
                     id_rasp INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -267,7 +265,7 @@ def check_doctor_login(con, doctor_id, password):
     cur.execute("SELECT id, name FROM doctors WHERE id = ? AND password = ?", (doctor_id, password))
     return cur.fetchone()
 
-def book_slot(con: sqlite3.Connection, id_pac: int, id_rasp: int) -> (bool, str):
+def book_slot(con: sqlite3.Connection, id_pac: int, id_rasp: int):
     cur = con.cursor()
     cur.execute("SELECT id_rasp FROM schedule WHERE id_rasp = ?", (id_rasp,))
     row = cur.fetchone()
