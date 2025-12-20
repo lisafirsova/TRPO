@@ -6,18 +6,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     specSelect.addEventListener("change", () => {
         const selectedSpec = specSelect.value;
+        // Очистим сетку дат
         dateTimeGrid.innerHTML = '';
 
         if (selectedSpec) {
+            // Соберём список опций врачей для выбранной специальности
             let options = '';
             doctorsData.forEach(doc => {
                 if (doc.spec_name === selectedSpec) {
                     options += `<option value="${doc.doctor_id}">${doc.doctor_name}</option>`;
                 }
             });
-            
+            // Добавим опцию "Любой врач" сверху и установим её как выбранную по умолчанию
             doctorSelect.innerHTML = `<option value="any">Любой врач</option>` + options;
             doctorSelect.value = 'any';
+            // Триггерим change, чтобы сразу подгрузить доступные слоты
             doctorSelect.dispatchEvent(new Event('change'));
         } else {
             doctorSelect.innerHTML = '<option value="">Выберите врача</option>';
@@ -26,32 +29,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     doctorSelect.addEventListener("change", () => {
-        const doctorId = doctorSelect.value;
-        dateTimeGrid.innerHTML = '<p class="loading-message">Загрузка расписания...</p>';
-        if (doctorId) {
-            if (doctorId === 'any') {
-                const spec = specSelect.value;
-                fetch(`/api/schedule?specialty=${encodeURIComponent(spec)}`)
-                    .then(response => response.json())
-                    .then(slots => {
-                        const freeSlots = slots.filter(s => !(s.status_slot && String(s.status_slot).toLowerCase().includes('зан')));
-                        renderSchedule(freeSlots);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        dateTimeGrid.innerHTML = '<p class="loading-message error">Не удалось загрузить расписание. Попробуйте позже.</p>';
-                    });
-                return;
-            }
-            fetch(`/api/schedule/${doctorId}`)
+    const doctorId = doctorSelect.value;
+    dateTimeGrid.innerHTML = '<p class="loading-message">Загрузка расписания...</p>';
+    
+    if (doctorId) {
+        if (doctorId === 'any') {
+            const spec = specSelect.value;
+            fetch(`/api/schedule?specialty=${encodeURIComponent(spec)}`)
                 .then(response => response.json())
-                .then(slots => renderSchedule(slots))
+                .then(slots => {
+                    const freeSlots = slots.filter(s => !(s.status_slot && String(s.status_slot).toLowerCase().includes('зан')));
+                    if (freeSlots.length === 0) {
+                        dateTimeGrid.innerHTML = '<p class="loading-message error" style="color: #ff9292ff;">Свободные записи у врачей данной специальности отсутствуют.</p>';
+                    } else {
+                        renderSchedule(freeSlots);
+                    }
+                })
                 .catch(error => {
                     console.error(error);
-                    dateTimeGrid.innerHTML = '<p class="loading-message error">Не удалось загрузить расписание. Попробуйте позже.</p>';
+                    dateTimeGrid.innerHTML = '<p class="loading-message error">Не удалось загрузить расписание.</p>';
                 });
+            return;
         }
-    });
+
+        fetch(`/api/schedule/${doctorId}`)
+            .then(response => response.json())
+            .then(slots => {
+                const hasFreeSlots = slots.some(s => !(s.status_slot && String(s.status_slot).toLowerCase().includes('зан')));
+                
+                if (slots.length === 0 || !hasFreeSlots) {
+                    dateTimeGrid.innerHTML = '<p class="loading-message error" style="color: #ff9393ff;">Свободные записи у данного врача отсутствуют.</p>';
+                } else {
+                    renderSchedule(slots);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                dateTimeGrid.innerHTML = '<p class="loading-message error">Не удалось загрузить расписание.</p>';
+            });
+    }
+});
 
     function renderSchedule(slots) {
         if (slots.length === 0) {
