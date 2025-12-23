@@ -2,6 +2,8 @@ import sqlite3
 from datetime import datetime, timedelta
 import re
 import os
+import bcrypt
+import logging 
 
 
 APPOINTMENT_INTERVAL_MINUTES = 30
@@ -55,6 +57,18 @@ def generate_slots(date_str, work_time_str, doctor_id, interval_minutes=30):
         current_dt += timedelta(minutes=interval_minutes)
     return slots
 
+logger = logging.getLogger(__name__)
+
+def hash_password(password):
+    try:
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+        return hashed.decode('utf-8')
+    except Exception as e:
+        logger.error(f"Ошибка при хешировании пароля: {e}")
+        raise
+
+
 WORK_SCHEDULE_DATA = [
     (1, '13:00 - 21:00', '13:00 - 21:00', '07:00 - 13:00', '07:00 - 13:00', '07:00 - 13:00'),
     (2, '7:00 - 13:00', '7:00 - 13:00', '13:00 - 21:00', '13:00 - 21:00', '13:00 - 21:00'),
@@ -95,14 +109,16 @@ def init_db(con: sqlite3.Connection):
                     password TEXT,
                     FOREIGN KEY (id_spec) REFERENCES specialize(id)
                 )""")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(1,'Волокитин Тимофей',201,2, 'doctor1.jpg','1ВТ')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(2,'Екатерина Мизулина',321,1, 'doctor2.jpg','2ЕМ')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(3,'Акакий Харитонович',412,3, 'doctor3.jpg','3АХ')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(4,'Азаркевич Никита',305,4, 'doctor4.jpg','4АН')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(5,'Мария Смирнова',214,2, 'doctor5.jpg','5МС')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(6,'Дмитрий Орлов',122,3, 'doctor6.jpg','6ДО')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(7,'Наталья Петрова',301,1, 'doctor7.jpg','7НП')")
-    cur.execute("INSERT OR IGNORE INTO doctors VALUES(8,'Игорь Беляев',220,2, 'doctor8.jpg','8ИБ')")
+    pas=[hash_password('1ВТ'),hash_password('2ЕМ'),hash_password('3АХ'),hash_password('4АН'),hash_password('5МС'),hash_password('6ДО'),hash_password('7НП'),hash_password('8ИБ')]
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(1,'Волокитин Тимофей',201,2, 'doctor1.jpg',pas[0]))
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(2,'Екатерина Мизулина',321,1, 'doctor2.jpg',pas[1]))
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(3,'Акакий Харитонович',412,3, 'doctor3.jpg',pas[2]))
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(4,'Азаркевич Никита',305,4, 'doctor4.jpg',pas[3]))
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(5,'Мария Смирнова',214,2, 'doctor5.jpg',pas[4]))
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(6,'Дмитрий Орлов',122,3, 'doctor6.jpg',pas[5]))
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(7,'Наталья Петрова',301,1, 'doctor7.jpg',pas[6]))
+    cur.execute("INSERT OR IGNORE INTO doctors VALUES(?,?,?,?,?,?)",(8,'Игорь Беляев',220,2, 'doctor8.jpg',pas[7]))
+ 
 
     cur.execute("""CREATE TABLE IF NOT EXISTS work_schedule (
                     id_ws INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -259,11 +275,16 @@ def get_ScheduleTalon(con, doctor_id):
     """, (doctor_id,))
     return [dict(row) for row in cur.fetchall()]
 
-def check_doctor_login(con, doctor_id, password):
+def check_doctor_login(con, name_input, plain_password):
     con.row_factory = sqlite3.Row
     cur = con.cursor()
-    cur.execute("SELECT id, name FROM doctors WHERE id = ? AND password = ?", (doctor_id, password))
-    return cur.fetchone()
+    cur.execute("SELECT id, name, password FROM doctors WHERE name = ?", (name_input,))
+    user = cur.fetchone()
+    if user:
+        stored_hash = user['password']
+        if bcrypt.checkpw(plain_password.encode('utf-8'), stored_hash.encode('utf-8')):
+            return user
+    return None
 
 def book_slot(con: sqlite3.Connection, id_pac: int, id_rasp: int):
     cur = con.cursor()

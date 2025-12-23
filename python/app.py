@@ -157,23 +157,60 @@ def api_get_schedule(doctor_id):
         schedule_slots = get_ScheduleTalon(con, doctor_id)
     return jsonify(schedule_slots)
 
+
+@app.route('/api/schedule', methods=['GET'])
+def api_get_schedule_by_spec():
+    specialty = request.args.get('specialty')
+    if not specialty:
+        return jsonify([])
+
+    with sqlite3.connect(DB_PATH) as con:
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+        cur.execute("""
+            SELECT 
+                sch.id_rasp, 
+                sch.data_priema, 
+                sch.time_priema, 
+                d.name AS doctor_name,
+                CASE 
+                    WHEN t.id_talon IS NULL THEN 'свободен' 
+                    ELSE 'занят' 
+                END AS status_slot
+            FROM schedule sch
+            JOIN doctors d ON sch.id_doctor = d.id
+            JOIN specialize s ON d.id_spec = s.id
+            LEFT JOIN talon t ON sch.id_rasp = t.id_slot
+            WHERE s.name = ? 
+              AND (t.id_talon IS NULL OR t.status != 'Активный')
+            ORDER BY sch.data_priema, sch.time_priema
+        """, (specialty,))
+        
+        slots = [dict(row) for row in cur.fetchall()]
+    return jsonify(slots)
+
+def is_admin(doctor_id, password):
+    return str(doctor_id) == "AdminAdmin" and password == "Admin_QaZwsX911"
+
 @app.route('/doctor', methods=['GET', 'POST'])
 def doctor():
     if request.method == 'POST':
-        doctor_id = request.form.get('doctor_id')
+        doctor_name = request.form.get('doctor_id')
         password = request.form.get('password')
-        if not doctor_id or not password:
+        if not doctor_name or not password:
             return render_template('doctor.html', error='Введите ID и пароль')
+        if is_admin(doctor_name, password):
+            return render_template('admin.html')
         
         with sqlite3.connect(DB_PATH) as con:
-            doctor_user = check_doctor_login(con, doctor_id, password)
+            doctor_user = check_doctor_login(con, doctor_name, password)
             if doctor_user:
-                patients_data = get_doctor_patients(con, doctor_id)
+                patients_data = get_doctor_patients(con, doctor_user['id'])
                 return render_template('tableForDoctor.html', 
                                      talons=patients_data, 
                                      doctor_name=doctor_user['name'])
             else:
-                return render_template('doctor.html', error='Неверный ID или пароль')
+                return render_template('doctor.html', error='Неверный логин или пароль')
     
     return render_template('doctor.html')
 
