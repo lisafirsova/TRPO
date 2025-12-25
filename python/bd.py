@@ -207,8 +207,8 @@ def get_users(con):
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
     cursor.execute("""
-        SELECT d.name AS doctor_name,
-               d.photo AS doctor_photo,
+        SELECT d.id, d.name AS doctor_name, 
+               d.nom_cab, d.photo AS doctor_photo,
                s.name AS spec_name
         FROM doctors d
         JOIN specialize s ON d.id_spec = s.id
@@ -332,6 +332,11 @@ def get_doctor_patients(con, doctor_id):
     """, (doctor_id,))
     return [dict(row) for row in cur.fetchall()]
 
+def get_specialties(con):
+    con.row_factory = sqlite3.Row
+    cursor = con.cursor()
+    cursor.execute("SELECT id, name FROM specialize")
+    return cursor.fetchall()
 
 if __name__ == '__main__':
     current_dir = os.path.dirname(os.path.abspath(__file__))

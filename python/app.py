@@ -1,7 +1,7 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 import os
 import sqlite3
-from bd import get_users, get_schedule, get_appointment, get_ScheduleTalon, check_doctor_login, get_doctor_patients
+from bd import get_users, get_schedule, get_appointment, get_ScheduleTalon, check_doctor_login, get_doctor_patients, hash_password, get_specialties, generate_slots
 from email.message import EmailMessage
 import smtplib
 import random
@@ -200,7 +200,7 @@ def doctor():
         if not doctor_name or not password:
             return render_template('doctor.html', error='Введите ID и пароль')
         if is_admin(doctor_name, password):
-            return render_template('admin.html')
+            return admin_panel()
         
         with sqlite3.connect(DB_PATH) as con:
             doctor_user = check_doctor_login(con, doctor_name, password)
@@ -213,6 +213,161 @@ def doctor():
                 return render_template('doctor.html', error='Неверный логин или пароль')
     
     return render_template('doctor.html')
+
+@app.route('/admin')
+def admin_panel():
+    error = request.args.get('error')
+    success = request.args.get('success')
+    
+    with sqlite3.connect(DB_PATH) as con:
+        con.row_factory = sqlite3.Row
+        doctors = get_users(con)
+        specialties = get_specialties(con)
+        
+        cur = con.cursor()
+        cur.execute("""
+            SELECT t.id_talon, p.name AS patient_name, sch.data_priema, sch.time_priema, 
+                   d.name AS doctor_name, d.id AS doctor_id
+            FROM talon t
+            JOIN pacient p ON t.id_pac = p.id_pac
+            JOIN schedule sch ON t.id_slot = sch.id_rasp
+            JOIN doctors d ON sch.id_doctor = d.id
+            WHERE t.status = 'Активный'
+        """)
+        talons = [dict(row) for row in cur.fetchall()]
+        
+    return render_template('admin.html', 
+                         doctors=doctors, 
+                         talons=talons, 
+                         specialties=specialties,
+                         error=error,
+                         success=success) 
+
+@app.route('/add-doctor', methods=['POST'])
+def add_doctor():
+    name = request.form.get('doctor-name')
+    password = request.form.get('doctor-password')
+    nom_cab = request.form.get('doctor-room')
+    id_spec = request.form.get('doctor-specialty')
+
+    if not all([name, password, nom_cab, id_spec]):
+        return {"message": "Заполните все поля"}, 400
+
+    hashed_password = hash_password(password)
+
+    with sqlite3.connect(DB_PATH) as con:
+        cur = con.cursor()
+        cur.execute("INSERT INTO doctors (name, nom_cab, id_spec, password) VALUES (?, ?, ?, ?)",
+                    (name, nom_cab, id_spec, hashed_password))
+        con.commit()
+    return {"message": "Врач успешно добавлен"}, 200
+
+@app.route('/delete-appointment/<int:talon_id>', methods=['POST'])
+def delete_appointment(talon_id):
+    with sqlite3.connect(DB_PATH) as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM talon WHERE id_talon = ?", (talon_id,))
+        con.commit()
+    return redirect(url_for('admin_panel'))
+    
+
+@app.route('/delete-doctor', methods=['POST'])
+def delete_doctor():
+    doctor_id = request.form.get('delete-doctor')
+    if not doctor_id:
+        return "Врач не выбран", 400
+
+    with sqlite3.connect(DB_PATH) as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM schedule WHERE id_doctor = ?", (doctor_id,))
+        cur.execute("DELETE FROM doctors WHERE id = ?", (doctor_id,))
+        con.commit()
+    return redirect(url_for('admin_panel'))
+
+@app.route('/update-schedule', methods=['POST'])
+def update_schedule():
+    doc_id = request.form.get('schedule-doctor')
+    date = request.form.get('schedule-date')
+    time_start = request.form.get('schedule-time-start')
+    time_end = request.form.get('schedule-time-end')
+
+    if not all([doc_id, date, time_start, time_end]):
+        return redirect(url_for('admin_panel', error='Заполните все поля'))
+
+    try:
+        from datetime import datetime
+        schedule_date = datetime.strptime(date, '%Y-%m-%d')
+        weekday = schedule_date.weekday()
+
+        if weekday > 4:
+            return redirect(url_for('admin_panel', error='Можно изменять расписание только на рабочие дни (пн-пт)'))
+        start_dt = datetime.strptime(time_start, '%H:%M')
+        end_dt = datetime.strptime(time_end, '%H:%M')
+        
+        if end_dt <= start_dt:
+            return redirect(url_for('admin_panel', error='Время окончания должно быть позже времени начала'))
+            
+    except ValueError as e:
+        return redirect(url_for('admin_panel', error=f'Неверный формат даты или времени: {str(e)}'))
+    full_time = f"{time_start} - {time_end}"
+
+    try:
+        with sqlite3.connect(DB_PATH) as con:
+            cur = con.cursor()
+            
+            cur.execute("SELECT id FROM doctors WHERE id = ?", (doc_id,))
+            if not cur.fetchone():
+                return redirect(url_for('admin_panel', error='Врач не найден'))
+            weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+            weekday_column = weekdays[weekday]
+            cur.execute("SELECT id_ws FROM work_schedule WHERE id_doctor = ?", (doc_id,))
+            work_schedule_row = cur.fetchone()
+            
+            if work_schedule_row:
+                cur.execute(f"""
+                    UPDATE work_schedule 
+                    SET {weekday_column} = ?
+                    WHERE id_doctor = ?
+                """, (full_time, doc_id))
+                print(f"Обновлено work_schedule для врача {doc_id}, день: {weekday_column}")
+            else:
+                days_values = [None] * 5
+                days_values[weekday] = full_time
+                cur.execute("""
+                    INSERT INTO work_schedule 
+                    (id_doctor, monday, tuesday, wednesday, thursday, friday) 
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (doc_id, *days_values))
+                print(f"Создана новая запись в work_schedule для врача {doc_id}")
+            cur.execute("""
+                DELETE FROM schedule 
+                WHERE id_doctor = ? AND data_priema = ?
+            """, (doc_id, date))
+            slots = generate_slots(date, full_time, int(doc_id))
+            if not slots:
+                print(f"Не удалось создать слоты для {date} {full_time}")
+                return redirect(url_for('admin_panel', 
+                                     error='Не удалось создать слоты для указанного времени'))
+            for slot in slots:
+                cur.execute("""
+                    INSERT INTO schedule (id_doctor, data_priema, time_priema) 
+                    VALUES (?, ?, ?)
+                """, (slot['id_doctor'], slot['data_priema'], slot['time_priema']))
+            
+            con.commit()
+            print(f"Расписание обновлено для врача {doc_id} на {date} ({weekday_column}): {len(slots)} слотов")
+            
+        return redirect(url_for('admin_panel', 
+                             success=f'Расписание успешно обновлено. Создано {len(slots)} слотов.'))
+        
+    except sqlite3.Error as e:
+        print(f"Ошибка базы данных при обновлении расписания: {e}")
+        return redirect(url_for('admin_panel', 
+                             error=f'Ошибка базы данных: {str(e)}'))
+    except Exception as e:
+        print(f"Непредвиденная ошибка при обновлении расписания: {e}")
+        return redirect(url_for('admin_panel', 
+                             error=f'Ошибка: {str(e)}'))
 
 if __name__ == '__main__':
     app.run(debug=True)
